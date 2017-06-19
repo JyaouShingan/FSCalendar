@@ -14,6 +14,9 @@
 
 @interface FSCalendarHeaderView ()<UICollectionViewDataSource,UICollectionViewDelegate>
 
+@property (weak, nonatomic) UIButton *leftButton;
+@property (weak, nonatomic) UIButton *rightButton;
+
 - (void)scrollToOffset:(CGFloat)scrollOffset animated:(BOOL)animated;
 - (void)configureCell:(FSCalendarHeaderCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 
@@ -45,6 +48,7 @@
 {
     _needsAdjustingViewFrame = YES;
     _needsAdjustingMonthPosition = YES;
+    _displayButtonsOnHorizontalScroll = NO;
     _scrollDirection = UICollectionViewScrollDirectionHorizontal;
     _scrollEnabled = YES;
     
@@ -62,6 +66,19 @@
     [self addSubview:collectionView];
     [collectionView registerClass:[FSCalendarHeaderCell class] forCellWithReuseIdentifier:@"cell"];
     self.collectionView = collectionView;
+
+    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [leftButton setImage:[UIImage imageNamed:@"triangle"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"triangle"] forState:UIControlStateNormal];
+    leftButton.transform = CGAffineTransformScale(CGAffineTransformIdentity, -1, 1);
+    leftButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    rightButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+
+    [self addSubview:leftButton];
+    [self addSubview:rightButton];
+    self.leftButton = leftButton;
+    self.rightButton = rightButton;
 }
 
 - (void)layoutSubviews
@@ -72,7 +89,15 @@
         _needsAdjustingViewFrame = NO;
         _collectionViewLayout.itemSize = CGSizeMake(1, 1);
         [_collectionViewLayout invalidateLayout];
-        _collectionView.frame = CGRectMake(0, self.fs_height*0.1, self.fs_width, self.fs_height*0.9);
+        if (_scrollDirection == FSCalendarScrollDirectionHorizontal && _displayButtonsOnHorizontalScroll) {
+            _collectionView.frame = CGRectMake(25, self.fs_height*0.1, self.fs_width-50, self.fs_height*0.9);
+            _leftButton.frame = CGRectMake(0, self.fs_height*0.1, 25, self.fs_height*0.9);
+            _rightButton.frame = CGRectMake(self.fs_width-25, self.fs_height*0.1, 25, self.fs_height*0.9);
+        } else {
+            _collectionView.frame = CGRectMake(0, self.fs_height*0.1, self.fs_width, self.fs_height*0.9);
+            _leftButton.frame = CGRectZero;
+            _rightButton.frame = CGRectZero;
+        }
     }
     
     if (_needsAdjustingMonthPosition) {
@@ -227,6 +252,17 @@
     [self.collectionView.visibleCells enumerateObjectsUsingBlock:^(__kindof FSCalendarHeaderCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
         [self configureCell:cell atIndexPath:[self.collectionView indexPathForCell:cell]];
     }];
+    FSCalendarAppearance *appearance = self.calendar.appearance;
+    self.leftButton.tintColor = appearance.headerButtonsColor;
+    self.rightButton.tintColor = appearance.headerButtonsColor;
+}
+
+- (void)updateHeaderButtonIndicatorsFirstPage:(BOOL)firstPage lastPage:(BOOL)lastPage
+{
+    if (self.leftButton.isEnabled == firstPage)
+        self.leftButton.enabled = !firstPage;
+    if (self.rightButton.isEnabled == lastPage)
+        self.rightButton.enabled = !lastPage;
 }
 
 @end

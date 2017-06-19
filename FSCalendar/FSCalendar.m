@@ -120,6 +120,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
 - (void)adjustMonthPosition;
 - (BOOL)requestBoundingDatesIfNecessary;
 - (void)configureAppearance;
+- (void)updateHeaderButtonIndicators;
 
 @end
 
@@ -246,7 +247,8 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
     self.calculator = [[FSCalendarCalculator alloc] initWithCalendar:self];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
-    
+
+    [self.collectionView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)dealloc
@@ -255,6 +257,8 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
     self.collectionView.dataSource = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+
+    [self.collectionView removeObserver:self forKeyPath:@"contentSize"];
 }
 
 #pragma mark - Overriden methods
@@ -1656,7 +1660,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         _minimumDate = newMin;
         _maximumDate = newMax;
         [self.calculator reloadSections];
-        
+
         return res;
     }
     return NO;
@@ -1668,6 +1672,21 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
     [self.visibleStickyHeaders makeObjectsPerformSelector:@selector(configureAppearance)];
     [self.calendarHeaderView configureAppearance];
     [self.calendarWeekdayView configureAppearance];
+}
+
+- (void)updateHeaderButtonIndicators
+{
+    // Update header button indicators
+    BOOL isFirstPage = _collectionView.contentOffset.x <= 0;
+    BOOL isLastPage = _collectionView.contentOffset.x >= _collectionView.contentSize.width - _collectionView.fs_width;
+    [self.calendarHeaderView updateHeaderButtonIndicatorsFirstPage:isFirstPage lastPage:isLastPage];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqual: @"contentSize"]) {
+        [self updateHeaderButtonIndicators];
+    }
 }
 
 @end

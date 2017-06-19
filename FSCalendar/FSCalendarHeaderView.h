@@ -20,12 +20,14 @@
 @property (assign, nonatomic) CGFloat scrollOffset;
 @property (assign, nonatomic) UICollectionViewScrollDirection scrollDirection;
 @property (assign, nonatomic) BOOL scrollEnabled;
+@property (assign, nonatomic) BOOL displayButtonsOnHorizontalScroll;
 @property (assign, nonatomic) BOOL needsAdjustingViewFrame;
 @property (assign, nonatomic) BOOL needsAdjustingMonthPosition;
 
 - (void)setScrollOffset:(CGFloat)scrollOffset animated:(BOOL)animated;
 - (void)reloadData;
 - (void)configureAppearance;
+- (void)updateHeaderButtonIndicatorsFirstPage:(BOOL)firstPage lastPage:(BOOL)lastPage;
 
 @end
 

@@ -36,8 +36,10 @@ class FSCalendarScopeExampleViewController: UIViewController, UITableViewDataSou
         if UIDevice.current.model.hasPrefix("iPad") {
             self.calendarHeightConstraint.constant = 400
         }
-        
+
+        self.calendar.calendarHeaderView.displayButtonsOnHorizontalScroll = true
         self.calendar.select(Date())
+        self.calendar.appearance.headerButtonsColor = .green
         
         self.view.addGestureRecognizer(self.scopeGesture)
         self.tableView.panGestureRecognizer.require(toFail: self.scopeGesture)
@@ -84,6 +86,14 @@ class FSCalendarScopeExampleViewController: UIViewController, UITableViewDataSou
 
     func calendarCurrentPageDidChange(_ calendar: FSCalendar) {
         print("\(self.dateFormatter.string(from: calendar.currentPage))")
+    }
+
+    func minimumDate(for calendar: FSCalendar) -> Date {
+        return Date().addingTimeInterval(-3600*24)
+    }
+
+    func maximumDate(for calendar: FSCalendar) -> Date {
+        return Date().addingTimeInterval(3600*24*20)
     }
     
     // MARK:- UITableViewDataSource
