@@ -67,10 +67,13 @@
     [collectionView registerClass:[FSCalendarHeaderCell class] forCellWithReuseIdentifier:@"cell"];
     self.collectionView = collectionView;
 
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeSystem];
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [leftButton setImage:[UIImage imageNamed:@"triangle"] forState:UIControlStateNormal];
-    [rightButton setImage:[UIImage imageNamed:@"triangle"] forState:UIControlStateNormal];
+    [leftButton setImage:[UIImage imageNamed:@"triangle" inBundle:bundle compatibleWithTraitCollection:nil]
+                forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"triangle" inBundle:bundle compatibleWithTraitCollection:nil]
+                 forState:UIControlStateNormal];
     leftButton.transform = CGAffineTransformScale(CGAffineTransformIdentity, -1, 1);
     leftButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
     rightButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
