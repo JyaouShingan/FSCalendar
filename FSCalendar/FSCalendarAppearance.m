@@ -67,6 +67,7 @@
         _borderColors[@(FSCalendarCellStateNormal)] = [UIColor clearColor];
         
         _borderRadius = 1.0;
+        _lineBorderColor = [UIColor clearColor];
         _eventDefaultColor = FSCalendarStandardEventDotColor;
         _eventSelectionColor = FSCalendarStandardEventDotColor;
         
@@ -388,6 +389,13 @@
         [self.calendar configureAppearance];
     }
 }
+
+- (void)setLineBorderColor:(UIColor *)lineBorderColor
+{
+    _lineBorderColor = lineBorderColor;
+    [self.calendar configureAppearance];
+}
+
 
 - (void)setWeekdayTextColor:(UIColor *)weekdayTextColor
 {

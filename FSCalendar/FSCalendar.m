@@ -1672,6 +1672,8 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
     [self.visibleStickyHeaders makeObjectsPerformSelector:@selector(configureAppearance)];
     [self.calendarHeaderView configureAppearance];
     [self.calendarWeekdayView configureAppearance];
+    self.topBorder.backgroundColor = self.appearance.lineBorderColor;
+    self.bottomBorder.backgroundColor = self.appearance.lineBorderColor;
 }
 
 - (void)updateHeaderButtonIndicators

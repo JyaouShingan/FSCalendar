@@ -200,6 +200,11 @@ typedef NS_OPTIONS(NSUInteger, FSCalendarCaseOptions) {
 @property (assign, nonatomic) CGFloat borderRadius;
 
 /**
+ * The color for the calendar top and bottom line border
+ */
+@property (assign, nonatomic) UIColor *lineBorderColor;
+
+/**
  * The case options manage the case of month label and weekday symbols.
  *
  * @see FSCalendarCaseOptions
